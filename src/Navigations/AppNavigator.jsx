@@ -72,10 +72,10 @@ function TabNavigator() {
       >
         <Tab.Screen name="HomeStack" component={MainStackScreen} options={{ title: 'Home' }} />
         <Tab.Screen name="ReportsTab" component={ReportsStackScreen} options={{ title: 'Reports' }} />
-        <Tab.Screen 
-          name="HospitalRegister" 
-          component={RegisterHospital} 
-          options={{ title: 'Register Hospital' }} 
+        <Tab.Screen
+          name="HospitalRegister"
+          component={RegisterHospital}
+          options={{ title: 'Register Hospital' }}
         />
       </Tab.Navigator>
 

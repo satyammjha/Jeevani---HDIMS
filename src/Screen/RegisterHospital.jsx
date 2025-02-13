@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios'; 
 
 const RegisterHospital = () => {
     const [hospitalName, setHospitalName] = useState('');
@@ -16,8 +17,18 @@ const RegisterHospital = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = () => {
-        console.log({
+    const handleSubmit = async () => {
+        // Validate all fields
+      if(
+        hospitalName === '' ||
+        district === '' ||
+        state === ''
+      ) {
+        Alert.alert('Error', 'All fields are required.');
+        return;
+      }
+        // Prepare the data to send
+        const hospitalData = {
             hospitalName,
             district,
             state,
@@ -26,11 +37,33 @@ const RegisterHospital = () => {
             contact,
             email,
             address,
-            departments,
+            departments: departments.split(',').map(dept => dept.trim()), // Convert comma-separated string to array
             id,
             password,
-        });
-        alert('Hospital Registered Successfully!');
+        };
+
+        try {
+            // Send POST request to the backend
+            const response = await axios.post('http://192.168.31.16:5000/api/hospitals', hospitalData);
+            if (response.status === 201) {
+                Alert.alert('Success', 'Hospital registered successfully!');
+                setHospitalName('');
+                setDistrict('');
+                setState('');
+                setPin('');
+                setHead('');
+                setContact('');
+                setEmail('');
+                setAddress('');
+                setDepartments('');
+                setId('');
+                setPassword('');
+            }
+        } catch (error) {
+            // Handle error
+            console.error('Error submitting form:', error);
+            Alert.alert('Error', 'Failed to register hospital. Please try again.');
+        }
     };
 
     const toggleShowPassword = () => {
@@ -39,7 +72,7 @@ const RegisterHospital = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Register a Hospital</Text>
+            <Text style={styles.title}>Registerr a Hospital</Text>
 
             {/* Hospital Name */}
             <View style={styles.inputContainer}>
@@ -53,6 +86,7 @@ const RegisterHospital = () => {
                 />
             </View>
 
+            {/* District and State */}
             <View style={styles.rowContainer}>
                 <View style={[styles.inputContainer, { flex: 1, marginRight: 8 }]}>
                     <Icon name="map-marker" size={20} color="#2196F3" style={styles.icon} />
@@ -145,7 +179,7 @@ const RegisterHospital = () => {
                 <Icon name="stethoscope" size={20} color="#2196F3" style={styles.icon} />
                 <TextInput
                     style={styles.input}
-                    placeholder="Departments Available"
+                    placeholder="Departments Available (comma-separated)"
                     placeholderTextColor="#999"
                     value={departments}
                     onChangeText={setDepartments}

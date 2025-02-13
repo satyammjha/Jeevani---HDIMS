@@ -44,8 +44,6 @@ function HomeScreen() {
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <KeyMetrics />
                 <QuickActions />
-
-                {/* Charts Section */}
                 <View style={styles.rowContainer}>
                     <View style={styles.chartContainer}>
                         <Charts
@@ -68,8 +66,9 @@ function HomeScreen() {
                         />
                     </View>
                 </View>
-
-                {/* Schemes Section */}
+                <View style={{ height: 300 }}>
+                    {/* <GoogleMapScreen /> */}
+                </View>
                 <SchemesContainer route={{ params: { scheme: dummyScheme } }} />
             </ScrollView>
         </View>
@@ -79,7 +78,7 @@ function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF', // Changed to white for a clean look
+        backgroundColor: '#FFFFFF',
         paddingHorizontal: 16,
         paddingTop: 16,
     },
@@ -89,17 +88,17 @@ const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 24, // Increased margin for better spacing
-        gap: 16, // Added gap between charts
+        marginBottom: 24,
+        gap: 16,
     },
     chartContainer: {
         width: screenWidth / 2 - 24,
-        backgroundColor: '#FFFFFF', // Changed to white
+        backgroundColor: '#FFFFFF',
         borderRadius: 12,
-        padding: 16, // Increased padding
+        padding: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1, // Subtle shadow
+        shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 1,
     },
