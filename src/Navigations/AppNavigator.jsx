@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from '../Screen/Home';
 import ReportsScreen from '../Screen/ReportsScreen';
 import ReportDetailsScreen from '../Screen/ReportDetailsScreen';
+import YojanaDetailsScreen from '../Screen/YojanaDetails';
+import RegisterHospital from '../Screen/RegisterHospital';
 
 const ReportsStack = createStackNavigator();
 
@@ -13,14 +15,25 @@ function ReportsStackScreen() {
   return (
     <ReportsStack.Navigator>
       <ReportsStack.Screen name="ReportsMain" component={ReportsScreen} options={{ headerShown: false }} />
-      <ReportsStack.Screen name="ReportDetails" component={ReportDetailsScreen} options={{ title: 'Report Details' }} />
+      <ReportsStack.Screen name="ReportDetails" component={ReportDetailsScreen} options={{ headerShown: false }} />
     </ReportsStack.Navigator>
+  );
+}
+
+const MainStack = createStackNavigator();
+
+function MainStackScreen() {
+  return (
+    <MainStack.Navigator>
+      <MainStack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <MainStack.Screen name="YojanaDetails" component={YojanaDetailsScreen} options={{ headerShown: false }} />
+    </MainStack.Navigator>
   );
 }
 
 const Tab = createBottomTabNavigator();
 
-function AppNavigator() {
+function TabNavigator() {
   const [notificationsVisible, setNotificationsVisible] = useState(false);
 
   const toggleNotifications = () => {
@@ -32,17 +45,23 @@ function AppNavigator() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
-            let iconName = route.name === 'Home' ? 'home' : 'file-document';
+            let iconName;
+            if (route.name === 'HomeStack') {
+              iconName = 'home';
+            } else if (route.name === 'ReportsTab') {
+              iconName = 'file-document';
+            } else if (route.name === 'HospitalRegister') {
+              iconName = 'hospital';
+            }
             return <Icon name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: '#2196F3',
           tabBarInactiveTintColor: 'gray',
           tabBarStyle: { backgroundColor: '#fff', paddingBottom: 5 },
           headerTitle: () => (
-            <Image
-              source={require('../Assets/jeevanilogo.png')} 
-              style={{ width: 50, height: 220 }}
-            />
+            <TouchableOpacity onPress={() => console.log('Navigate to Home')}>
+              <Image source={require('../Assets/jeevanilogo.png')} style={{ width: 100, height: 180 }} />
+            </TouchableOpacity>
           ),
           headerRight: () => (
             <TouchableOpacity onPress={toggleNotifications} style={{ marginRight: 15 }}>
@@ -51,10 +70,16 @@ function AppNavigator() {
           ),
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
+        <Tab.Screen name="HomeStack" component={MainStackScreen} options={{ title: 'Home' }} />
         <Tab.Screen name="ReportsTab" component={ReportsStackScreen} options={{ title: 'Reports' }} />
+        <Tab.Screen 
+          name="HospitalRegister" 
+          component={RegisterHospital} 
+          options={{ title: 'Register Hospital' }} 
+        />
       </Tab.Navigator>
 
+      {/* Notifications Modal */}
       <Modal visible={notificationsVisible} onRequestClose={toggleNotifications} transparent animationType="slide">
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={toggleNotifications}>
           <View style={styles.modalContent}>
@@ -67,7 +92,7 @@ function AppNavigator() {
   );
 }
 
-export default AppNavigator;
+export default TabNavigator;
 
 const styles = StyleSheet.create({
   modalOverlay: {

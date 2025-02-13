@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "638458666104",
+    "project_id": "jeevani-97265",
+    "storage_bucket": "jeevani-97265.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638458666104:android:c97cce04aa0398cf16a18d",
+        "android_client_info": {
+          "package_name": "com.jeevani"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU_vzT7bkxMas75tSaQyeWLpk_a7yy5t8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
