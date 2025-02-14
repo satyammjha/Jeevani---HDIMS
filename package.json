@@ -22,8 +22,11 @@
     "react": "18.3.1",
     "react-native": "0.77.0",
     "react-native-chart-kit": "^6.12.0",
+    "react-native-file-viewer": "^2.1.5",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.23.1",
     "react-native-image-slider-box": "^2.0.7",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.20.1",
     "react-native-paper": "^5.13.1",
     "react-native-permissions": "^5.2.5",
@@ -34,9 +37,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^15.11.1",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-vision-camera": "^4.6.3",
-    "victory-native": "^41.16.1",
-    "vision-camera-code-scanner": "^0.2.0"
+    "victory-native": "^41.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

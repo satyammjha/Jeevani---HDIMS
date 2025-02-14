@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
+import { Modal } from 'react-native';
 
 const AddPatient = () => {
     const [firstName, setFirstName] = useState('');
@@ -14,36 +15,37 @@ const AddPatient = () => {
     const [allergies, setAllergies] = useState('');
     const [bloodGroup, setBloodGroup] = useState('');
     const [emergencyContact, setEmergencyContact] = useState('');
+    const [successModal, setSuccessModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
-        if (
-            firstName === '' ||
-            lastName === ''
-        ) {
+        if (firstName === '' || lastName === '') {
             Alert.alert('Error', 'Please fill in all required fields.');
             return;
         }
 
-        // Prepare the data to send
         const patientData = {
             firstName,
             lastName,
-            age: parseInt(age, 10),
+            age: age.toString(),
             gender,
             contactNumber,
             address,
-            medicalHistory: medicalHistory.split(',').map(item => item.trim()),
-            allergies: allergies.split(',').map(item => item.trim()),
+            medicalHistory,
+            allergies,
             bloodGroup,
             emergencyContact,
         };
 
+        console.log('Sending patient data:', patientData);
+
+        setIsLoading(true);
         try {
-            const response = await axios.post('http://192.168.125.108:5000/api/addPatient', patientData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+            const response = await axios.post('http://192.168.31.16:5000/api/addPatient', patientData, { headers: { 'Content-Type': 'application/json' } });
+            console.log('Response:', response.data);
+
             if (response.status === 201) {
-                Alert.alert('Success', 'Patient added successfully!');
+                setSuccessModal(true);
                 setFirstName('');
                 setLastName('');
                 setAge('');
@@ -58,153 +60,86 @@ const AddPatient = () => {
         } catch (error) {
             console.error('Error submitting form:', error);
             Alert.alert('Error', 'Failed to add patient. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Add Patient</Text>
-
-            {/* First Name */}
-            <View style={styles.inputContainer}>
-                <Icon name="account" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="First Name"
-                    placeholderTextColor="#999"
-                    value={firstName}
-                    onChangeText={setFirstName}
-                />
-            </View>
-
-            {/* Last Name */}
-            <View style={styles.inputContainer}>
-                <Icon name="account" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Last Name"
-                    placeholderTextColor="#999"
-                    value={lastName}
-                    onChangeText={setLastName}
-                />
-            </View>
-
-            {/* Age */}
-            <View style={styles.inputContainer}>
-                <Icon name="numeric" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Age"
-                    placeholderTextColor="#999"
-                    value={age}
-                    onChangeText={setAge}
-                    keyboardType="numeric"
-                />
-            </View>
-
-            {/* Gender */}
-            <View style={styles.inputContainer}>
-                <Icon name="gender-male-female" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Gender"
-                    placeholderTextColor="#999"
-                    value={gender}
-                    onChangeText={setGender}
-                />
-            </View>
-
-            {/* Contact Number */}
-            <View style={styles.inputContainer}>
-                <Icon name="phone" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Contact Number"
-                    placeholderTextColor="#999"
-                    value={contactNumber}
-                    onChangeText={setContactNumber}
-                    keyboardType="phone-pad"
-                />
-            </View>
-
-            {/* Address */}
-            <View style={styles.inputContainer}>
-                <Icon name="home" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Address"
-                    placeholderTextColor="#999"
-                    value={address}
-                    onChangeText={setAddress}
-                    multiline
-                />
-            </View>
-
-            {/* Medical History */}
-            <View style={styles.inputContainer}>
-                <Icon name="medical-bag" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Medical History (comma-separated)"
-                    placeholderTextColor="#999"
-                    value={medicalHistory}
-                    onChangeText={setMedicalHistory}
-                    multiline
-                />
-            </View>
-
-            {/* Allergies */}
-            <View style={styles.inputContainer}>
-                <Icon name="allergy" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Allergies (comma-separated)"
-                    placeholderTextColor="#999"
-                    value={allergies}
-                    onChangeText={setAllergies}
-                    multiline
-                />
-            </View>
-
-            {/* Blood Group */}
-            <View style={styles.inputContainer}>
-                <Icon name="water" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Blood Group"
-                    placeholderTextColor="#999"
-                    value={bloodGroup}
-                    onChangeText={setBloodGroup}
-                />
-            </View>
-
-            {/* Emergency Contact */}
-            <View style={styles.inputContainer}>
-                <Icon name="phone-alert" size={20} color="#2196F3" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Emergency Contact"
-                    placeholderTextColor="#999"
-                    value={emergencyContact}
-                    onChangeText={setEmergencyContact}
-                    keyboardType="phone-pad"
-                />
-            </View>
+            {[
+                { icon: 'account', placeholder: 'First Name', value: firstName, setter: setFirstName },
+                { icon: 'account', placeholder: 'Last Name', value: lastName, setter: setLastName },
+                { icon: 'numeric', placeholder: 'Age', value: age, setter: setAge, keyboard: 'numeric' },
+                { icon: 'gender-male-female', placeholder: 'Gender', value: gender, setter: setGender },
+                { icon: 'phone', placeholder: 'Contact Number', value: contactNumber, setter: setContactNumber, keyboard: 'phone-pad' },
+                { icon: 'home', placeholder: 'Address', value: address, setter: setAddress, multiline: true },
+                { icon: 'medical-bag', placeholder: 'Medical History (comma-separated)', value: medicalHistory, setter: setMedicalHistory, multiline: true },
+                { icon: 'allergy', placeholder: 'Allergies (comma-separated)', value: allergies, setter: setAllergies, multiline: true },
+                { icon: 'water', placeholder: 'Blood Group', value: bloodGroup, setter: setBloodGroup },
+                { icon: 'phone-alert', placeholder: 'Emergency Contact', value: emergencyContact, setter: setEmergencyContact, keyboard: 'phone-pad' },
+            ].map((field, index) => (
+                <View key={index} style={styles.inputContainer}>
+                    <Icon
+                        name={field.icon}
+                        size={20}
+                        color="#00796B"
+                        style={styles.icon}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder={field.placeholder}
+                        placeholderTextColor="#90A4AE"
+                        value={field.value}
+                        onChangeText={field.setter}
+                        keyboardType={field.keyboard || 'default'}
+                        multiline={field.multiline || false}
+                    />
+                </View>
+            ))}
 
             {/* Submit Button */}
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>Add Patient</Text>
+            <TouchableOpacity
+                style={[styles.submitButton, isLoading && styles.disabledButton]}
+                onPress={handleSubmit}
+                disabled={isLoading}
+            >
+                {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={styles.submitButtonText}>Add Patient</Text>
+                )}
             </TouchableOpacity>
+
+            {/* Success Modal */}
+            <Modal
+                visible={successModal}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setSuccessModal(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Icon name="check-circle" size={50} color="#00796B" />
+                        <Text style={styles.modalText}>Patient added successfully!</Text>
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => setSuccessModal(false)}
+                        >
+                            <Text style={styles.modalButtonText}>OK</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
 
-export default AddPatient;
-
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#F5F5F5',
         flexGrow: 1,
     },
     title: {
@@ -212,36 +147,82 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 20,
-        color: '#2196F3',
+        color: '#00796B',
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#ccc',
+        backgroundColor: '#FFFFFF',
         borderRadius: 8,
         marginBottom: 16,
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     icon: {
         marginRight: 10,
     },
     input: {
         flex: 1,
-        paddingVertical: 12,
+        paddingVertical: 14,
         fontSize: 16,
-        color: '#000',
+        color: '#263238',
     },
     submitButton: {
-        backgroundColor: '#2196F3',
+        backgroundColor: '#00796B',
         borderRadius: 8,
         padding: 16,
         alignItems: 'center',
         marginTop: 16,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    disabledButton: {
+        backgroundColor: '#B0BEC5',
     },
     submitButtonText: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: '600',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: 'white',
+        padding: 24,
+        borderRadius: 12,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#00796B',
+        marginVertical: 16,
+        textAlign: 'center',
+    },
+    modalButton: {
+        backgroundColor: '#00796B',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 8,
+        marginTop: 16,
+    },
+    modalButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: '600',
     },
 });
+
+export default AddPatient;

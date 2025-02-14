@@ -1,143 +1,158 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { Card, Title, useTheme, Button } from 'react-native-paper';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, StyleSheet, Dimensions, Animated, Easing } from 'react-native';
+import { Card, Title } from 'react-native-paper';
 import { LineChart } from 'react-native-chart-kit';
 
 const screenWidth = Dimensions.get('window').width;
+const dataFilters = ['daily', 'weekly', 'monthly'];
 
 function KeyMetrics() {
-  const theme = useTheme();
-  const [filter, setFilter] = useState('daily');
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const data = {
-    daily: { totalPatients: 1234, activePrograms: 5, facilitiesCovered: 23, percentage: 5 },
-    weekly: { totalPatients: 8540, activePrograms: 5, facilitiesCovered: 23, percentage: 12 },
-    monthly: { totalPatients: 32100, activePrograms: 5, facilitiesCovered: 23, percentage: 20 },
+    daily: {
+      totalPatients: 1234,
+      percentage: 5,
+      chartData: [45, 68, 72, 58, 81, 63, 49]
+    },
+    weekly: {
+      totalPatients: 8540,
+      percentage: 12,
+      chartData: [120, 145, 132, 158, 142, 165, 180]
+    },
+    monthly: {
+      totalPatients: 32100,
+      percentage: 20,
+      chartData: [450, 480, 510, 490, 530, 560, 600]
+    },
   };
 
-  const chartData = {
-    labels: ['Daily', 'Weekly', 'Monthly'],
-    datasets: [
-      {
-        data: [data.daily.totalPatients, data.weekly.totalPatients, data.monthly.totalPatients],
-        strokeWidth: 2,
-      },
-    ],
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        easing: Easing.ease,
+        useNativeDriver: true
+      }).start(() => {
+        const nextIndex = (activeIndex + 1) % dataFilters.length;
+        setActiveIndex(nextIndex);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          easing: Easing.ease,
+          useNativeDriver: true
+        }).start();
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [activeIndex]);
+
+  const currentData = data[dataFilters[activeIndex]];
 
   return (
     <View style={styles.metricsContainer}>
-      <Card style={styles.metricCard}>
-        <Card.Content>
-          {/* Filter Buttons */}
-          <View style={styles.filterContainer}>
-            <Button
-              mode={filter === 'daily' ? 'contained' : 'outlined'}
-              onPress={() => setFilter('daily')}
-              style={styles.filterButton}
-              labelStyle={styles.filterButtonLabel}
-            >
-              Daily
-            </Button>
-            <Button
-              mode={filter === 'weekly' ? 'contained' : 'outlined'}
-              onPress={() => setFilter('weekly')}
-              style={styles.filterButton}
-              labelStyle={styles.filterButtonLabel}
-            >
-              Weekly
-            </Button>
-            <Button
-              mode={filter === 'monthly' ? 'contained' : 'outlined'}
-              onPress={() => setFilter('monthly')}
-              style={styles.filterButton}
-              labelStyle={styles.filterButtonLabel}
-            >
-              Monthly
-            </Button>
-          </View>
+      <Animated.View style={{ opacity: fadeAnim }}>
+        <Card style={styles.metricCard}>
+          <Card.Content>
+            <Title style={styles.metricTitle}>
+              Total Patients: {currentData.totalPatients.toLocaleString()}
+            </Title>
+            <Title style={styles.metricSubtitle}>
+              ▲ {currentData.percentage}% from last period
+            </Title>
 
-          {/* Metrics */}
-          <Title style={styles.metricTitle}>Total Patients: {data[filter].totalPatients}</Title>
-          <Title style={styles.metricSubtitle}>+{data[filter].percentage}%</Title>
-          <Title style={styles.metricSubtitle}>Active Programs: {data[filter].activePrograms}</Title>
-          <Title style={styles.metricSubtitle}>States Covered: {data[filter].facilitiesCovered}</Title>
+            <LineChart
+              data={{
+                labels: [],
+                datasets: [{ data: currentData.chartData }]
+              }}
+              width={screenWidth - 70}
+              height={180}
+              withDots={false}
+              withShadow={false}
+              withInnerLines={false}
+              chartConfig={{
+                backgroundGradientFrom: '#E0F2F1',
+                backgroundGradientTo: '#B2DFDB',
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0, 121, 107, ${opacity})`,
+                strokeWidth: 3,
+                propsForBackgroundLines: {
+                  strokeDasharray: '',
+                  stroke: '#E0F2F1'
+                }
+              }}
+              bezier
+              style={styles.chart}
+            />
+          </Card.Content>
+        </Card>
+      </Animated.View>
 
-          {/* Line Chart */}
-          {/* <LineChart
-            data={chartData}
-            width={screenWidth - 40}
-            height={120}
-            chartConfig={{
-              backgroundGradientFrom: '#FFFFFF',
-              backgroundGradientTo: '#FFFFFF',
-              color: (opacity = 1) => `rgba(56, 142, 60, ${opacity})`,
-              strokeWidth: 2,
-              propsForDots: {
-                r: '4',
-                strokeWidth: '2',
-                stroke: '#388E3C',
-              },
-              propsForBackgroundLines: {
-                stroke: '#E0E0E0',
-              },
-              propsForLabels: {
-                fontSize: 10,
-                color: '#757575',
-              },
-            }}
-            bezier
-            withHorizontalLabels={true}
-            withVerticalLabels={true}
-            withInnerLines={true}
-            withOuterLines={false}
-            style={styles.chart}
-          /> */}
-        </Card.Content>
-      </Card>
+      {/* Pagination Dots */}
+      <View style={styles.pagination}>
+        {dataFilters.map((_, idx) => (
+          <View
+            key={idx}
+            style={[
+              styles.dot,
+              activeIndex === idx && styles.activeDot
+            ]}
+          />
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   metricsContainer: {
-    marginBottom: 16,
+    margin: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   metricCard: {
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-    elevation: 2,
-    padding: 12,
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  filterButton: {
-    flex: 1,
-    marginHorizontal: 4,
-    borderRadius: 8,
-  },
-  filterButtonLabel: {
-    fontSize: 12,
+    borderRadius: 16,
+    backgroundColor: '#00796B',
+    elevation: 0,
+    shadowColor: '#004D40',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
   metricTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 4,
-    color: '#212121',
+    color: '#FFFFFF',
+    marginBottom: 8,
   },
   metricSubtitle: {
     fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 4,
-    color: '#757575',
+    color: '#B2DFDB',
+    marginBottom: 20,
   },
   chart: {
     marginTop: 12,
-    borderRadius: 8,
+    borderRadius: 12,
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#B2DFDB',
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: '#00796B',
+    width: 16,
   },
 });
 

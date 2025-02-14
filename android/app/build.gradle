@@ -77,7 +77,6 @@ android {
         }
     }
 }
-enableHermes= true
 dependencies {
     implementation("com.facebook.react:react-android")
     if (hermesEnabled.toBoolean()) {

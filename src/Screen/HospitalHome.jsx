@@ -1,82 +1,132 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { AuthContext } from '../Context/AuthContext';
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
+import CustomSlider from '../Components/CustomSlider';
+import LineChartComponent from '../Components/HospitalHomeChart';
+
+const { width } = Dimensions.get('window');
 
 const HospitalHome = ({ navigation }) => {
     const { user, logout } = useContext(AuthContext);
 
+    // Sample data for patient admissions
+    const patientFlowData = [
+        { date: 'Mon', value: 45 },
+        { date: 'Tue', value: 68 },
+        { date: 'Wed', value: 72 },
+        { date: 'Thu', value: 58 },
+        { date: 'Fri', value: 81 },
+        { date: 'Sat', value: 63 },
+        { date: 'Sun', value: 49 }
+    ];
+
     return (
-        <View style={styles.container}>
-            {/* Welcome Banner */}
-            <View style={styles.banner}>
+        <ScrollView contentContainerStyle={styles.container}>
+            {/* Header Banner */}
+            <LinearGradient colors={['#00796B', '#004D40']} style={styles.banner}>
                 <Icon name="hospital-building" size={30} color="#fff" />
                 <Text style={styles.bannerText}>Welcome to Jeevani, {user?.id}</Text>
+            </LinearGradient>
+
+            {/* Custom Slider */}
+            <CustomSlider />
+
+            {/* Patient Admissions Chart */}
+            <View style={styles.chartContainer}>
+                <LineChartComponent
+                    reports={patientFlowData}
+                    title="Weekly Patient Admissions"
+                    yAxisSuffix=" pts"
+                    chartWidth={width - 40}
+                    chartHeight={220}
+                />
             </View>
 
-            <View style={styles.content}>
-                <Text style={styles.title}>Hospital Dashboard</Text>
-
-                {/* Cards with Icons */}
+            {/* Quick Actions Grid */}
+            <Text style={styles.sectionTitle}>Quick Actions</Text>
+            <View style={styles.gridContainer}>
                 <TouchableOpacity
-                    style={styles.card}
+                    style={styles.squareBox}
                     onPress={() => navigation.navigate('ViewPatients')}>
                     <Icon name="account-group" size={26} color="#00796B" />
-                    <View>
-                        <Text style={styles.cardText}>View Patients</Text>
-                        <Text style={styles.cardSubtext}>Manage patient records</Text>
-                    </View>
+                    <Text style={styles.boxText}>View Patients</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={styles.card}
+                    style={styles.squareBox}
                     onPress={() => navigation.navigate('AddPatient')}>
                     <Icon name="account-plus" size={26} color="#00796B" />
-                    <View>
-                        <Text style={styles.cardText}>Add New Patient</Text>
-                        <Text style={styles.cardSubtext}>Register new patient</Text>
-                    </View>
+                    <Text style={styles.boxText}>Add New Patient</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={styles.card}
+                    style={styles.squareBox}
                     onPress={() => navigation.navigate('Reports')}>
                     <Icon name="file-chart" size={26} color="#00796B" />
-                    <View>
-                        <Text style={styles.cardText}>Generate Reports</Text>
-                        <Text style={styles.cardSubtext}>Create daily/monthly reports</Text>
-                    </View>
+                    <Text style={styles.boxText}>Generate Reports</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.squareBox}
+                    onPress={() => navigation.navigate('Resources')}>
+                    <Icon name="medical-bag" size={26} color="#00796B" />
+                    <Text style={styles.boxText}>Resources</Text>
+                </TouchableOpacity>
+            </View>
+
+            {/* Resources Status */}
+            <Text style={styles.sectionTitle}>Resources Available</Text>
+            <View style={styles.resourcesContainer}>
+                <View style={styles.resourceItem}>
+                    <Icon name="bed" size={24} color="#00796B" />
+                    <Text style={styles.resourceText}>Beds: 120</Text>
+                </View>
+                <View style={styles.resourceItem}>
+                    <Icon name="doctor" size={24} color="#00796B" />
+                    <Text style={styles.resourceText}>Doctors: 25</Text>
+                </View>
+                <View style={styles.resourceItem}>
+                    <Icon name="medical-bag" size={24} color="#00796B" />
+                    <Text style={styles.resourceText}>Equipment: 50</Text>
+                </View>
             </View>
 
             {/* Logout Button */}
             <Button
                 mode="contained"
                 style={styles.logoutButton}
+                labelStyle={styles.buttonLabel}
                 icon="logout"
                 onPress={logout}>
                 Logout
             </Button>
 
+            {/* Footer */}
             <Text style={styles.footer}>Developed by Team Square</Text>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
     banner: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#00796B',
-        padding: 15,
-        borderRadius: 8,
+        padding: 20,
+        borderRadius: 10,
         marginBottom: 20,
+        elevation: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     bannerText: {
         fontSize: 18,
@@ -84,43 +134,96 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         fontWeight: 'bold',
     },
-    content: {
-        flex: 1,
-    },
-    title: {
-        fontSize: 24,
+    chartContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20, // Reduced padding for a more compact look
+        marginVertical: 8, // Slightly smaller margin
+        elevation: 0, // Light elevation for depth
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        alignItems: 'center', // Centers content horizontally
+        justifyContent: 'center', // Centers content vertically
+    }
+    ,
+    sectionTitle: {
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#00796B',
-        marginBottom: 30,
-    },
-    card: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 15,
+        marginTop: 20,
         marginBottom: 15,
-        elevation: 3,
-        gap: 10,
     },
-    cardText: {
-        fontSize: 18,
+    gridContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    squareBox: {
+        width: '48%',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        marginBottom: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    boxText: {
+        fontSize: 16,
         fontWeight: '500',
         color: '#333',
+        marginTop: 10,
+        textAlign: 'center',
     },
-    cardSubtext: {
+    resourcesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        elevation: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    resourceItem: {
+        alignItems: 'center',
+        flex: 1,
+    },
+    resourceText: {
         fontSize: 14,
         color: '#666',
+        marginTop: 5,
     },
     logoutButton: {
-        marginTop: 20,
+        marginTop: 30,
         backgroundColor: '#00796B',
+        borderRadius: 8,
+        paddingVertical: 5,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    buttonLabel: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#fff',
     },
     footer: {
         textAlign: 'center',
         color: '#666',
-        marginTop: 20,
+        marginTop: 30,
         paddingVertical: 10,
+        fontSize: 12,
     },
 });
 

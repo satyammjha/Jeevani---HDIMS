@@ -3,13 +3,22 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
+const COLORS = {
+  primary: '#00796B',
+  secondary: '#004D40',
+  accent: '#B2DFDB',
+  background: '#FFFFFF',
+  text: '#263238',
+  textSecondary: '#607D8B',
+};
+
 const schemes = [
-    { id: 1, name: 'Ayushman Bharat', icon: 'hospital-box', description: 'Provides health insurance up to ₹5 lakh per family per year.' },
-    { id: 2, name: 'Janani Suraksha Yojana', icon: 'baby', description: 'Aimed at reducing maternal and infant mortality rates.' },
-    { id: 3, name: 'National AIDS Control Program', icon: 'ribbon', description: 'Focused on HIV/AIDS prevention, treatment, and awareness.' },
-    { id: 4, name: 'PM National Dialysis Program', icon: 'heart-pulse', description: 'Provides free dialysis services to poor patients.' },
-    { id: 5, name: 'Rashtriya Bal Swasthya Karyakram', icon: 'account-child', description: 'Comprehensive child health screening program.' },
-    { id: 6, name: 'Mission Indradhanush', icon: 'needle', description: 'Universal immunization program for children and pregnant women.' },
+    { id: 1, name: 'Ayushman Bharat', icon: 'hospital-box', description: 'Health insurance up to ₹5 lakh/year' },
+    { id: 2, name: 'Janani Suraksha', icon: 'baby', description: 'Maternal & infant health program' },
+    { id: 3, name: 'National AIDS Control', icon: 'ribbon', description: 'HIV/AIDS prevention & treatment' },
+    { id: 4, name: 'PM Dialysis Program', icon: 'heart-pulse', description: 'Free dialysis services' },
+    { id: 5, name: 'Bal Swasthya', icon: 'account-child', description: 'Child health screening' },
+    { id: 6, name: 'Mission Indradhanush', icon: 'needle', description: 'Immunization program' },
 ];
 
 const SchemesContainer = () => {
@@ -17,15 +26,23 @@ const SchemesContainer = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.card}>
-                {schemes.map((scheme, index) => (
+            <Text style={styles.sectionTitle}>Government Health Schemes</Text>
+            <View style={styles.grid}>
+                {schemes.map((scheme) => (
                     <TouchableOpacity
                         key={scheme.id}
-                        style={styles.schemeItem}
+                        style={styles.schemeCard}
                         onPress={() => navigation.navigate('YojanaDetails', { scheme })}
                     >
-                        <Icon name={scheme.icon} size={40} color="#007bff" />
-                        <Text style={styles.text}>{scheme.name}</Text>
+                        <View style={styles.iconContainer}>
+                            <Icon 
+                                name={scheme.icon} 
+                                size={32} 
+                                color={COLORS.primary} 
+                            />
+                        </View>
+                        <Text style={styles.schemeName}>{scheme.name}</Text>
+                        <Text style={styles.schemeDescription}>{scheme.description}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -35,26 +52,52 @@ const SchemesContainer = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        marginHorizontal: 16,
+        marginBottom: 24,
     },
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 16,
-        elevation: 5,
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: COLORS.primary,
+        marginBottom: 16,
+        paddingHorizontal: 8,
+    },
+    grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
     },
-    schemeItem: {
-        width: '30%',
-        alignItems: 'center',
-        marginVertical: 10,
+    schemeCard: {
+        width: '48%',
+        backgroundColor: COLORS.background,
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 16,
+        elevation: 0,
+        shadowColor: COLORS.secondary,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
     },
-    text: {
+    iconContainer: {
+        backgroundColor: '#E0F2F1',
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    schemeName: {
         fontSize: 14,
-        marginTop: 8,
-        textAlign: 'center',
+        fontWeight: '600',
+        color: COLORS.text,
+        marginBottom: 4,
+    },
+    schemeDescription: {
+        fontSize: 12,
+        color: COLORS.textSecondary,
+        lineHeight: 16,
     },
 });
 

@@ -87,8 +87,15 @@ const HospitalChatScreen = () => {
         }
     };
 
+  
     return (
         <View style={styles.container}>
+            {/* Chat Header */}
+            <View style={styles.header}>
+                <Icon name="robot-happy" size={24} color="#fff" />
+                <Text style={styles.headerText}>Jeevani AI Assistant</Text>
+            </View>
+
             {/* Chat History */}
             <ScrollView
                 style={styles.chatContainer}
@@ -107,20 +114,31 @@ const HospitalChatScreen = () => {
                             msg.role === 'user' ? styles.userBubble : styles.modelBubble,
                         ]}
                     >
-                        <Text style={styles.messageText}>{msg.text}</Text>
+                        {msg.role === 'model' && (
+                            <Icon name="robot" size={20} color="#4CAF50" style={styles.bubbleIcon} />
+                        )}
+                        <Text style={[
+                            styles.messageText,
+                            msg.role === 'user' && styles.userMessageText
+                        ]}>{msg.text}</Text>
+                        {msg.role === 'user' && (
+                            <Icon name="account" size={20} color="#fff" style={styles.bubbleIcon} />
+                        )}
                     </View>
                 ))}
 
                 {/* "Thinking..." Indicator */}
                 {isLoading && (
                     <View style={[styles.messageBubble, styles.modelBubble]}>
-                        <Text style={styles.messageText}>Thinking...</Text>
+                        <ActivityIndicator size="small" color="#4CAF50" />
+                        <Text style={styles.thinkingText}>Analyzing your query...</Text>
                     </View>
                 )}
             </ScrollView>
 
             {/* Input Area */}
             <View style={styles.inputContainer}>
+                <Icon name="message-text" size={20} color="#666" style={styles.inputIcon} />
                 <TextInput
                     style={styles.input}
                     placeholder="Type your message..."
@@ -129,7 +147,11 @@ const HospitalChatScreen = () => {
                     onChangeText={setInput}
                     onSubmitEditing={handleSend}
                 />
-                <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading}>
+                <TouchableOpacity 
+                    style={styles.sendButton} 
+                    onPress={handleSend} 
+                    disabled={isLoading}
+                >
                     {isLoading ? (
                         <ActivityIndicator size="small" color="#fff" />
                     ) : (
@@ -144,56 +166,93 @@ const HospitalChatScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#F5FDF7',
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#00796B',
+        padding: 16,
+        elevation: 3,
+    },
+    headerText: {
+        fontSize: 18,
+        color: '#fff',
+        fontWeight: '600',
+        marginLeft: 10,
     },
     chatContainer: {
         flex: 1,
-        padding: 16,
+        paddingHorizontal: 16,
     },
     chatContent: {
-        paddingBottom: 16,
+        paddingVertical: 16,
     },
     messageBubble: {
         maxWidth: '80%',
-        padding: 12,
-        borderRadius: 12,
-        marginBottom: 8,
+        padding: 14,
+        borderRadius: 16,
+        marginBottom: 12,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: 8,
     },
     userBubble: {
         alignSelf: 'flex-end',
-        backgroundColor: '#2196F3',
+        backgroundColor: '#00796B',
+        borderBottomRightRadius: 4,
     },
     modelBubble: {
         alignSelf: 'flex-start',
-        backgroundColor: '#e0e0e0',
+        backgroundColor: '#fff',
+        borderBottomLeftRadius: 4,
+        elevation: 0,
+    },
+    bubbleIcon: {
+        marginTop: 2,
     },
     messageText: {
         fontSize: 16,
-        color: '#000',
+        color: '#333',
+        flex: 1,
+    },
+    userMessageText: {
+        color: '#fff',
+    },
+    thinkingText: {
+        color: '#666',
+        fontSize: 14,
+        marginLeft: 8,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 8,
+        padding: 12,
         backgroundColor: '#fff',
         borderTopWidth: 1,
-        borderTopColor: '#ccc',
+        borderTopColor: '#E0E0E0',
+    },
+    inputIcon: {
+        marginLeft: 8,
     },
     input: {
         flex: 1,
-        height: 40,
-        paddingHorizontal: 12,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 20,
-        marginRight: 8,
+        height: 48,
+        paddingHorizontal: 16,
+        backgroundColor: '#F5F5F5',
+        borderRadius: 24,
+        marginHorizontal: 8,
         fontSize: 16,
+        color: '#333',
     },
     sendButton: {
-        padding: 10,
-        backgroundColor: '#2196F3',
-        borderRadius: 20,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: '#00796B',
         justifyContent: 'center',
         alignItems: 'center',
+        elevation: 0,
     },
 });
 
