@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const RegisterHospital = () => {
     const [hospitalName, setHospitalName] = useState('');
@@ -18,15 +18,14 @@ const RegisterHospital = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async () => {
-        // Validate all fields
-      if(
-        hospitalName === '' ||
-        district === '' ||
-        state === ''
-      ) {
-        Alert.alert('Error', 'All fields are required.');
-        return;
-      }
+        if (
+            hospitalName === '' ||
+            district === '' ||
+            state === ''
+        ) {
+            Alert.alert('Error', 'All fields are required.');
+            return;
+        }
         // Prepare the data to send
         const hospitalData = {
             hospitalName,
@@ -43,8 +42,10 @@ const RegisterHospital = () => {
         };
 
         try {
-            // Send POST request to the backend
-            const response = await axios.post('http://192.168.31.16:5000/api/hospitals', hospitalData);
+            const response = await axios.post('http://192.168.125.108:5000/api/hospitals', hospitalData,
+                 {
+                headers: { "Content-Type": "multipart/form-data" }}
+            );
             if (response.status === 201) {
                 Alert.alert('Success', 'Hospital registered successfully!');
                 setHospitalName('');
@@ -72,7 +73,7 @@ const RegisterHospital = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Registerr a Hospital</Text>
+            <Text style={styles.title}>Register a Hospital</Text>
 
             {/* Hospital Name */}
             <View style={styles.inputContainer}>

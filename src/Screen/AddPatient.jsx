@@ -16,14 +16,9 @@ const AddPatient = () => {
     const [emergencyContact, setEmergencyContact] = useState('');
 
     const handleSubmit = async () => {
-        // Validate required fields
         if (
             firstName === '' ||
-            lastName === '' ||
-            age === '' ||
-            gender === '' ||
-            contactNumber === '' ||
-            address === ''
+            lastName === ''
         ) {
             Alert.alert('Error', 'Please fill in all required fields.');
             return;
@@ -37,18 +32,18 @@ const AddPatient = () => {
             gender,
             contactNumber,
             address,
-            medicalHistory: medicalHistory.split(',').map(item => item.trim()), // Convert comma-separated string to array
-            allergies: allergies.split(',').map(item => item.trim()), // Convert comma-separated string to array
+            medicalHistory: medicalHistory.split(',').map(item => item.trim()),
+            allergies: allergies.split(',').map(item => item.trim()),
             bloodGroup,
             emergencyContact,
         };
 
         try {
-            // Send POST request to the backend
-            const response = await axios.post('http://192.168.31.16:5000/api/patients', patientData);
+            const response = await axios.post('http://192.168.125.108:5000/api/addPatient', patientData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
             if (response.status === 201) {
                 Alert.alert('Success', 'Patient added successfully!');
-                // Clear the form
                 setFirstName('');
                 setLastName('');
                 setAge('');

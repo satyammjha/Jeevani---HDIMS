@@ -1,13 +1,28 @@
 import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HospitalHome from '../Screen/HospitalHome';
 import HospitalChatScreen from '../Screen/HospitalChatScreen';
-import QRScannerScreen from '../Screen/QrCodeScanner'; // Import the QR Scanner screen
-import AddPatient from '../Screen/AddPatient'; // Import the AddPatient screen
+import AddPatient from '../Screen/AddPatient';
+import ViewPatients from '../Screen/ViewPatients';
+import Reports from '../Screen/Reorts';
+import QRScannerScreen from '../Screen/QrCodeScanner';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function HomeStack() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="HospitalHome" component={HospitalHome} options={{ title: 'Home' }} />
+            <Stack.Screen name="ViewPatients" component={ViewPatients} options={{ title: 'Patients' }} />
+            <Stack.Screen name="Reports" component={Reports} options={{ title: 'Reports' }} />
+            <Stack.Screen name="QRScanner" component={QRScannerScreen} options={{ title: 'Scan QR Code' }} />
+        </Stack.Navigator>
+    );
+}
 
 function HospitalTabNavigator() {
     const [notificationsVisible, setNotificationsVisible] = useState(false);
@@ -22,14 +37,14 @@ function HospitalTabNavigator() {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ color, size }) => {
                         let iconName;
-                        if (route.name === 'HospitalHome') {
+                        if (route.name === 'HomeStack') {
                             iconName = 'home';
                         } else if (route.name === 'HospitalChat') {
-                            iconName = 'chat'; // Use a chat icon for the chat screen
-                        } else if (route.name === 'QRScanner') {
-                            iconName = 'qrcode-scan'; // Use a QR code icon for the scanner screen
+                            iconName = 'chat';
                         } else if (route.name === 'AddPatient') {
-                            iconName = 'account-plus'; // Use an icon for the AddPatient screen
+                            iconName = 'account-plus';
+                        } else if (route.name === 'QRScanner') {
+                            iconName = 'qrcode-scan';
                         }
                         return <Icon name={iconName} size={size} color={color} />;
                     },
@@ -48,25 +63,12 @@ function HospitalTabNavigator() {
                     ),
                 })}
             >
-                <Tab.Screen name="HospitalHome" component={HospitalHome} options={{ title: 'Home' }} />
-                <Tab.Screen
-                    name="HospitalChat"
-                    component={HospitalChatScreen}
-                    options={{ title: 'Chat' }} // Set the title for the chat screen
-                />
-                <Tab.Screen
-                    name="QRScanner"
-                    component={QRScannerScreen}
-                    options={{ title: 'Scan QR' }} // Set the title for the QR scanner screen
-                />
-                <Tab.Screen
-                    name="AddPatient"
-                    component={AddPatient}
-                    options={{ title: 'Add Patient' }} // Set the title for the AddPatient screen
-                />
+                <Tab.Screen name="HomeStack" component={HomeStack} options={{ title: 'Home' }} />
+                <Tab.Screen name="HospitalChat" component={HospitalChatScreen} options={{ title: 'Chat' }} />
+                <Tab.Screen name="AddPatient" component={AddPatient} options={{ title: 'Add Patient' }} />
+                <Tab.Screen name="QRScanner" component={QRScannerScreen} options={{ title: 'Scan QR' }} />
             </Tab.Navigator>
 
-            {/* Reuse the same notifications modal */}
             <Modal visible={notificationsVisible} onRequestClose={toggleNotifications} transparent animationType="slide">
                 <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={toggleNotifications}>
                     <View style={styles.modalContent}>

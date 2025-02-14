@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyMetrics from '../Components/KeyMetrices';
 import QuickActions from '../Components/QuickActions';
 import { Charts } from '../Components/Charts';
@@ -10,12 +11,6 @@ const screenWidth = Dimensions.get('window').width;
 
 function HomeScreen() {
     const theme = useTheme();
-    const carouselData = [
-        { id: '1', title: 'Slide 1', description: 'This is the first slide.' },
-        { id: '2', title: 'Slide 2', description: 'This is the second slide.' },
-        { id: '3', title: 'Slide 3', description: 'This is the third slide.' },
-    ];
-
     const newCasesData = [
         { id: '1', state: 'DEL', newCases: 120 },
         { id: '2', state: 'HR', newCases: 95 },
@@ -42,8 +37,11 @@ function HomeScreen() {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <View style={styles.bannerContainer}>
+                    <Icon name="hospital-building" size={24} color="#FFFFFF" style={styles.bannerIcon} />
+                    <Text style={styles.bannerText}>Welcome to Jeevani</Text>
+                </View>
                 <KeyMetrics />
-                <QuickActions />
                 <View style={styles.rowContainer}>
                     <View style={styles.chartContainer}>
                         <Charts
@@ -66,9 +64,7 @@ function HomeScreen() {
                         />
                     </View>
                 </View>
-                <View style={{ height: 300 }}>
-                    {/* <GoogleMapScreen /> */}
-                </View>
+
                 <SchemesContainer route={{ params: { scheme: dummyScheme } }} />
             </ScrollView>
         </View>
@@ -78,12 +74,29 @@ function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#F5F5F5',
         paddingHorizontal: 16,
         paddingTop: 16,
     },
     scrollContainer: {
         paddingBottom: 32,
+    },
+    bannerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#4CAF50',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        marginBottom: 16,
+    },
+    bannerIcon: {
+        marginRight: 10,
+    },
+    bannerText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
     },
     rowContainer: {
         flexDirection: 'row',
@@ -100,7 +113,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
-        elevation: 1,
+        elevation: 2,
+        alignItems: 'center',
     },
 });
 

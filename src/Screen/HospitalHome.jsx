@@ -2,40 +2,59 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../Context/AuthContext';
 import { Button } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const HospitalHome = ({ navigation }) => {
     const { user, logout } = useContext(AuthContext);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Welcome, {user?.id}</Text>
+            {/* Welcome Banner */}
+            <View style={styles.banner}>
+                <Icon name="hospital-building" size={30} color="#fff" />
+                <Text style={styles.bannerText}>Welcome to Jeevani, {user?.id}</Text>
+            </View>
 
             <View style={styles.content}>
                 <Text style={styles.title}>Hospital Dashboard</Text>
+
+                {/* Cards with Icons */}
                 <TouchableOpacity
                     style={styles.card}
-                    onPress={() => navigation.navigate('Patients')}>
-                    <Text style={styles.cardText}>View Patients</Text>
-                    <Text style={styles.cardSubtext}>Manage patient records</Text>
+                    onPress={() => navigation.navigate('ViewPatients')}>
+                    <Icon name="account-group" size={26} color="#00796B" />
+                    <View>
+                        <Text style={styles.cardText}>View Patients</Text>
+                        <Text style={styles.cardSubtext}>Manage patient records</Text>
+                    </View>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     style={styles.card}
                     onPress={() => navigation.navigate('AddPatient')}>
-                    <Text style={styles.cardText}>Add New Patient</Text>
-                    <Text style={styles.cardSubtext}>Register new patient</Text>
+                    <Icon name="account-plus" size={26} color="#00796B" />
+                    <View>
+                        <Text style={styles.cardText}>Add New Patient</Text>
+                        <Text style={styles.cardSubtext}>Register new patient</Text>
+                    </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.card}
                     onPress={() => navigation.navigate('Reports')}>
-                    <Text style={styles.cardText}>Generate Reports</Text>
-                    <Text style={styles.cardSubtext}>Create daily/monthly reports</Text>
+                    <Icon name="file-chart" size={26} color="#00796B" />
+                    <View>
+                        <Text style={styles.cardText}>Generate Reports</Text>
+                        <Text style={styles.cardSubtext}>Create daily/monthly reports</Text>
+                    </View>
                 </TouchableOpacity>
             </View>
 
+            {/* Logout Button */}
             <Button
                 mode="contained"
                 style={styles.logoutButton}
+                icon="logout"
                 onPress={logout}>
                 Logout
             </Button>
@@ -51,10 +70,19 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
-    header: {
-        fontSize: 18,
-        color: '#666',
+    banner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#00796B',
+        padding: 15,
+        borderRadius: 8,
         marginBottom: 20,
+    },
+    bannerText: {
+        fontSize: 18,
+        color: '#fff',
+        marginLeft: 10,
+        fontWeight: 'bold',
     },
     content: {
         flex: 1,
@@ -62,15 +90,18 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#2196F3',
+        color: '#00796B',
         marginBottom: 30,
     },
     card: {
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 20,
+        padding: 15,
         marginBottom: 15,
         elevation: 3,
+        gap: 10,
     },
     cardText: {
         fontSize: 18,
@@ -80,11 +111,10 @@ const styles = StyleSheet.create({
     cardSubtext: {
         fontSize: 14,
         color: '#666',
-        marginTop: 5,
     },
     logoutButton: {
         marginTop: 20,
-        backgroundColor: '#2196F3',
+        backgroundColor: '#00796B',
     },
     footer: {
         textAlign: 'center',

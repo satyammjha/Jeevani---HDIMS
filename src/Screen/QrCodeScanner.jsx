@@ -1,38 +1,46 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import { RNCamera } from 'react-native-camera';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Alert, StyleSheet } from 'react-native';
+import { Camera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
+import { scanQRCodes } from 'vision-camera-code-scanner';
+import { runOnJS } from 'react-native-reanimated';
 
 const QRScannerScreen = () => {
   const [scannedData, setScannedData] = useState(null);
+  const devices = useCameraDevices();
+  const device = devices.back;
 
-  const onSuccess = (event) => {
-    const data = event.data; // Extract the data from the QR code
-    setScannedData(data); // Set the scanned data to state
-    Alert.alert('QR Code Scanned', `Data: ${data}`, [
-      { text: 'OK', onPress: () => console.log('OK Pressed') },
-    ]);
-  };
+  useEffect(() => {
+    (async () => {
+      const status = await Camera.requestCameraPermission();
+      if (status !== 'authorized') {
+        Alert.alert('Permission Required', 'Camera permission is needed to scan QR codes.');
+      }
+    })();
+  }, []);
+
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet';
+    const codes = scanQRCodes(frame);
+    if (codes.length > 0 && !scannedData) {
+      runOnJS(setScannedData)(codes[0].value);
+      runOnJS(Alert.alert)('Scanned Data', codes[0].value);
+    }
+  }, [scannedData]);
+
+  if (!device) {
+    return <Text style={styles.text}>No camera found or camera not supported.</Text>;
+  }
 
   return (
     <View style={styles.container}>
-      <QRCodeScanner
-        onRead={onSuccess} // Callback when a QR code is scanned
-        flashMode={RNCamera.Constants.FlashMode.auto} // Enable/disable flash
-        topContent={
-          <Text style={styles.centerText}>
-            Scan a QR code to view its content.
-          </Text>
-        }
-        bottomContent={
-          scannedData && (
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>Scanned Data:</Text>
-              <Text style={styles.dataText}>{scannedData}</Text>
-            </View>
-          )
-        }
+      <Camera
+        style={StyleSheet.absoluteFill}
+        device={device}
+        isActive={true}
+        frameProcessor={frameProcessor}
+        frameProcessorFps={5} // Adjust for performance
       />
+      {scannedData && <Text style={styles.text}>Scanned: {scannedData}</Text>}
     </View>
   );
 };
@@ -40,25 +48,13 @@ const QRScannerScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
   },
-  centerText: {
+  text: {
     fontSize: 18,
-    color: '#000',
-    marginBottom: 20,
-  },
-  dataContainer: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 8,
-  },
-  dataText: {
-    fontSize: 16,
-    color: '#000',
-    textAlign: 'center',
+    color: 'black',
+    position: 'absolute',
+    bottom: 50,
+    alignSelf: 'center',
   },
 });
 

@@ -32,11 +32,26 @@ const YojanaDetails = ({ route }) => {
             </View>
 
             <View style={styles.detailsContainer}>
-                <Text style={styles.detail}><Text style={styles.label}>Registered Individuals:</Text> {scheme.registeredIndividuals}</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Men:</Text> {scheme.men}</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Women:</Text> {scheme.women}</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Funds Allocated:</Text> ₹{scheme.funds}</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Region:</Text> {scheme.region}</Text>
+                <View style={styles.detailRow}>
+                    <Icon name="account-group" size={20} color="#388E3C" />
+                    <Text style={styles.detail}><Text style={styles.label}>Registered:</Text> {scheme.registeredIndividuals}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Icon name="gender-male" size={20} color="#388E3C" />
+                    <Text style={styles.detail}><Text style={styles.label}>Men:</Text> {scheme.men}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Icon name="gender-female" size={20} color="#388E3C" />
+                    <Text style={styles.detail}><Text style={styles.label}>Women:</Text> {scheme.women}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Icon name="currency-inr" size={20} color="#388E3C" />
+                    <Text style={styles.detail}><Text style={styles.label}>Funds Allocated:</Text> ₹{scheme.funds}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Icon name="map-marker" size={20} color="#388E3C" />
+                    <Text style={styles.detail}><Text style={styles.label}>Region:</Text> {scheme.region}</Text>
+                </View>
             </View>
         </View>
     );
@@ -48,7 +63,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        backgroundColor: '#E8F5E9',
+        backgroundColor: '#ffffff', // White background
     },
     icon: {
         marginBottom: 10,
@@ -67,30 +82,35 @@ const styles = StyleSheet.create({
     },
     chartContainer: {
         width: '100%',
-        backgroundColor: '#A5D6A7',
+        backgroundColor: '#ffffff',
         borderRadius: 12,
         padding: 16,
         marginBottom: 20,
-        shadowColor: '#1B5E20',
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.1,
         shadowRadius: 6,
         elevation: 4,
     },
     detailsContainer: {
         width: '100%',
         padding: 12,
-        backgroundColor: '#C8E6C9',
+        backgroundColor: '#ffffff',
         borderRadius: 12,
-        shadowColor: '#1B5E20',
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.1,
         shadowRadius: 6,
         elevation: 3,
     },
+    detailRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 8,
+    },
     detail: {
         fontSize: 16,
-        marginBottom: 8,
         color: '#1B5E20',
     },
     label: {
