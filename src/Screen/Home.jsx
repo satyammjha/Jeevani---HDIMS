@@ -1,12 +1,15 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { LineChart } from 'react-native-chart-kit';
 import KeyMetrics from '../Components/KeyMetrices';
 import SchemesContainer from '../Components/SchemesContainer';
+import DiseaseHeatMap from '../Components/HeatMap';
 
 const { width } = Dimensions.get('window');
+
 const COLORS = {
     primary: '#00796B',
     secondary: '#004D40',
@@ -15,7 +18,10 @@ const COLORS = {
     text: '#263238',
 };
 
-function HomeScreen() {
+function HomeScreen({ navigation }) {
+    // Ensure navigation is available
+    const nav = useNavigation(); 
+
     const chartData = {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
         datasets: [{
@@ -25,36 +31,49 @@ function HomeScreen() {
         }],
     };
 
+    // Navigation handlers
+    const handleQuickActionPress = (action) => {
+        switch (action.label) {
+            case 'Add Hospital':
+                nav.navigate('HospitalTab');
+                break;
+            case 'Appointments':
+                nav.navigate('Appointments');
+                break;
+            case 'Reports':
+                nav.navigate('ReportsTab');
+                break;
+            case 'Analytics':
+                nav.navigate('Analytics');
+                break;
+            case 'View Hospitals':
+                nav.navigate('HospitalsList');
+                break;
+            default:
+                break;
+        }
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {/* Header Banner */}
 
-                <LinearGradient
-                    colors={[COLORS.primary, COLORS.secondary]}
-                    style={styles.header}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                >
-                    <View style={styles.headerContent}>
-                        <Icon name="hospital-box" size={32} color="#fff" />
-                        <View style={styles.headerTextContainer}>
-                            <Text style={styles.headerTitle}>Jeevani HDIMS</Text>
-                        </View>
-                    </View>
-                </LinearGradient>
                 {/* Key Metrics */}
                 <KeyMetrics />
 
                 {/* Quick Actions Row */}
                 <View style={styles.actionsRow}>
                     {[
-                        { icon: 'plus-circle', label: 'New Patient' },
-                        { icon: 'calendar-clock', label: 'Appointments' },
+                        { icon: 'plus-circle', label: 'Add Hospital' },
                         { icon: 'file-document', label: 'Reports' },
+                        { icon: 'hospital-building', label: 'View Hospitals' },
                         { icon: 'chart-areaspline', label: 'Analytics' },
                     ].map((action, index) => (
-                        <TouchableOpacity key={index} style={styles.actionCard}>
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.actionCard}
+                            onPress={() => handleQuickActionPress(action)}
+                        >
                             <LinearGradient
                                 colors={['#E0F2F1', '#B2DFDB']}
                                 style={styles.actionIconContainer}
@@ -93,8 +112,11 @@ function HomeScreen() {
                     />
                 </View>
 
+                {/* Disease HeatMap */}
+                <DiseaseHeatMap />
+
                 {/* Schemes Container */}
-                <SchemesContainer />
+                <SchemesContainer navigation={nav} />
             </ScrollView>
         </View>
     );
@@ -107,28 +129,6 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         paddingBottom: 24,
-    },
-
-    header: {
-        padding: 24,
-        margin: 16,
-        borderRadius: 16,
-        elevation: 0,
-        shadowColor: COLORS.secondary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-    },
-    headerTitle: {
-        fontSize: 22,
-        fontWeight: '700',
-        color: '#fff',
-        marginTop: 12,
-    },
-    headerSubtitle: {
-        fontSize: 14,
-        color: '#B2DFDB',
-        marginTop: 4,
     },
     actionsRow: {
         flexDirection: 'row',
@@ -183,35 +183,6 @@ const styles = StyleSheet.create({
     },
     chart: {
         borderRadius: 12,
-    },
-    header: {
-        padding: 24,
-        margin: 16,
-        borderRadius: 16,
-        elevation: 8,
-        shadowColor: COLORS.secondary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-    },
-    headerContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    headerTextContainer: {
-        marginLeft: 16,
-    },
-    headerTitle: {
-        fontSize: 22,
-        fontWeight: '700',
-        color: '#fff',
-        letterSpacing: 0.5,
-    },
-    headerSubtitle: {
-        fontSize: 14,
-        color: '#B2DFDB',
-        marginTop: 4,
-        fontWeight: '500',
     },
 });
 

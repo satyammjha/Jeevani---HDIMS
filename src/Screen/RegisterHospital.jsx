@@ -42,9 +42,10 @@ const RegisterHospital = () => {
         };
 
         try {
-            const response = await axios.post('http://192.168.125.108:5000/api/hospitals', hospitalData,
-                 {
-                headers: { "Content-Type": "multipart/form-data" }}
+            const response = await axios.post('http://192.168.117.108:5000/api/hospitals', hospitalData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" }
+                }
             );
             if (response.status === 201) {
                 Alert.alert('Success', 'Hospital registered successfully!');

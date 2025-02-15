@@ -25,6 +25,8 @@
     "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.23.1",
+    "react-native-heatmap": "^0.1.2",
+    "react-native-html-to-pdf": "^0.12.0",
     "react-native-image-slider-box": "^2.0.7",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.20.1",

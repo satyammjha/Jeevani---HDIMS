@@ -26,7 +26,7 @@ const UpdatePatient = ({ route, navigation }) => {
     const fetchPatient = async () => {
         try {
             console.log('Fetching patient with ID:', patientId); // Log the patient ID
-            const response = await axios.get(`http://192.168.31.16:5000/api/patients/${patientId}`);
+            const response = await axios.get(`http://192.168.117.108:5000/api/patients/${patientId}`);
             console.log('API Response:', response.data); // Log the response
             setPatient(response.data);
         } catch (error) {
@@ -43,7 +43,7 @@ const UpdatePatient = ({ route, navigation }) => {
     // Handle update
     const handleUpdate = async () => {
         try {
-            await axios.put(`http://192.168.31.16:5000/api/patients/${patientId}`, patient);
+            await axios.put(`http://192.168.117.108:5000/api/patients/${patientId}`, patient);
             Alert.alert('Success', 'Patient updated successfully!');
             navigation.goBack();
         } catch (error) {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 16,
         alignItems: 'center',
-        elevation: 0, 
+        elevation: 0,
     },
     submitButtonText: {
         color: '#fff',

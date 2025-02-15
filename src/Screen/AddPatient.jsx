@@ -41,7 +41,7 @@ const AddPatient = () => {
 
         setIsLoading(true);
         try {
-            const response = await axios.post('http://192.168.31.16:5000/api/addPatient', patientData, { headers: { 'Content-Type': 'application/json' } });
+            const response = await axios.post('http://192.168.117.108:5000/api/addPatient', patientData, { headers: { 'Content-Type': 'application/json' } });
             console.log('Response:', response.data);
 
             if (response.status === 201) {

@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { LineChart } from 'react-native-chart-kit';
 
 const { width } = Dimensions.get('window');
 
 const Resources = () => {
-  // Dummy data - replace with actual data
   const resources = {
     staff: [
       { id: 1, name: 'Doctors', count: 45, icon: 'doctor' },
@@ -24,7 +24,25 @@ const Resources = () => {
       { id: 10, name: 'ECG Machines', count: 25, icon: 'heart-pulse' },
       { id: 11, name: 'X-Ray Machines', count: 12, icon: 'radiology-box' },
       { id: 12, name: 'Dialysis Machines', count: 18, icon: 'kidney' },
+    ],
+    supplies: [
+      { id: 13, name: 'Oxygen Cylinders', count: 200, icon: 'gas-cylinder' },
+      { id: 14, name: 'Ambulances', count: 10, icon: 'ambulance' },
+      { id: 15, name: 'Pharmacy Stock', count: 5000, icon: 'pill' },
+      { id: 16, name: 'Diagnostic Facilities', count: 8, icon: 'flask' },
+      { id: 17, name: 'Medical Waste Disposal', count: 3, icon: 'delete-circle' },
     ]
+  };
+
+  const icuUtilizationData = {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [
+      {
+        data: [30, 35, 40, 38, 42, 45, 50],
+        color: (opacity = 1) => `rgba(0, 121, 107, ${opacity})`,
+        strokeWidth: 2,
+      },
+    ],
   };
 
   const ResourceCard = ({ item }) => (
@@ -37,17 +55,6 @@ const Resources = () => {
     </TouchableOpacity>
   );
 
-  const ResourceSection = ({ title, data }) => (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      <View style={styles.grid}>
-        {data.map((item) => (
-          <ResourceCard key={item.id} item={item} />
-        ))}
-      </View>
-    </View>
-  );
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -55,97 +62,133 @@ const Resources = () => {
         <Text style={styles.updateText}>Last updated: 1 hour ago</Text>
       </View>
 
-      <ResourceSection title="Medical Staff" data={resources.staff} />
-      <ResourceSection title="Facilities" data={resources.facilities} />
-      <ResourceSection title="Medical Equipment" data={resources.equipment} />
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>ICU Bed Utilization</Text>
+        <LineChart
+          data={icuUtilizationData}
+          width={width - 32}
+          height={200}
+          chartConfig={{
+            backgroundColor: 'transparent',
+            backgroundGradientFrom: 'transparent',
+            backgroundGradientTo: 'transparent',
+            color: (opacity = 1) => `rgba(0, 121, 107, ${opacity})`,
+            labelColor: () => '#00796B',
+            propsForDots: {
+              r: '4',
+              strokeWidth: '2',
+              stroke: '#00796B',
+            },
+          }}
+          bezier
+          style={styles.chart}
+        />
+      </View>
 
-      <View style={styles.statusContainer}>
-        <Icon name="alert-circle" size={24} color="#00796B" />
-        <Text style={styles.statusText}>All systems operational</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Available Resources</Text>
+        {Object.values(resources).flat().map((item) => (
+          <ResourceCard key={item.id} item={item} />
+        ))}
       </View>
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#F5F5F5',
-    padding: 16,
+    backgroundColor: '#F8FAFB',
+    padding: 20,
   },
   header: {
     marginBottom: 24,
-    alignItems: 'center',
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E7ED',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#00796B',
-    marginBottom: 8,
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#1A2E35',
+    marginBottom: 4,
+    fontFamily: 'System', // Use actual font if available
   },
   updateText: {
-    color: '#666',
-    fontSize: 14,
+    color: '#8A9BA8',
+    fontSize: 13,
+    fontWeight: '500',
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 32,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#00796B',
-    marginBottom: 16,
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1A2E35',
+    marginBottom: 20,
     paddingLeft: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#00796B',
   },
-  grid: {
+  cardsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
   card: {
-    width: width / 2 - 24,
+    width: width / 2 - 28,
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
     marginBottom: 16,
     alignItems: 'center',
-    elevation: 2,
-    shadowColor: '#000',
+    shadowColor: '#396B9D',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#F0F4F8',
   },
   cardIconContainer: {
-    backgroundColor: '#E0F2F1',
-    padding: 12,
-    borderRadius: 50,
-    marginBottom: 12,
+    backgroundColor: '#E8F4F3',
+    padding: 14,
+    borderRadius: 14,
+    marginBottom: 16,
+    width: 56,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardCount: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#00796B',
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#1A2E35',
     marginBottom: 4,
   },
   cardLabel: {
     fontSize: 14,
-    color: '#666',
+    color: '#5A6B7A',
     textAlign: 'center',
-  },
-  statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#E0F2F1',
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  statusText: {
-    color: '#00796B',
-    marginLeft: 8,
     fontWeight: '500',
+    lineHeight: 20,
+  },
+  chart: {
+    marginVertical: 8,
+    borderRadius: 16,
+    padding: 12,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#396B9D',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  chartHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    paddingHorizontal: 8,
   },
 });
-
 export default Resources;

@@ -18,7 +18,7 @@ const ViewPatients = ({ navigation }) => {
 
     const fetchPatients = async () => {
         try {
-            const response = await axios.get('http://192.168.31.16:5000/api/patients');
+            const response = await axios.get('http://192.168.117.108:5000/api/patients');
             setPatients(response.data);
             setFilteredPatients(response.data);
         } catch (error) {
@@ -32,7 +32,7 @@ const ViewPatients = ({ navigation }) => {
     // Handle delete patient
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://192.168.31.16:5000/api/patients/${id}`);
+            await axios.delete(`http://192.168.117.108:5000/api/patients/${id}`);
             showModal('Patient deleted successfully!');
             fetchPatients(); // Refresh the list
         } catch (error) {
