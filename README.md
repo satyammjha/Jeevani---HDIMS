@@ -42,45 +42,45 @@ _(SIH 2024 PS - SIH1626: Health Data Information & Management System Mobile Appl
 ### Admin Portal
 
 1. **Admin Dashboard**  
-   ![Admin Home](/screenshots/Admin-Home.jpg)  
+   ![Admin Home](/Screenshots/Admin-Home.jpg)  
    _National health overview with key metrics_
 
 2. **Hospital Management**  
-   ![Hospital Admin](/screenshots/Hospital%20Admin.jpg)  
+   ![Hospital Admin](/Screenshots/Hospital%20Admin.jpg)  
    _Add/verify hospitals with geo-tags_
 
 3. **Predictive Analytics**  
-   ![Admin Analytics](/screenshots/Analysis%20-%20Admin.jpg)  
+   ![Admin Analytics](/Screenshots/Analysis%20-%20Admin.jpg)  
    _Disease spread forecasting models_
 
 4. **Reporting Dashboard**  
-   ![Admin Reports](/screenshots/Reports%20-%20Admin.jpg)  
+   ![Admin Reports](/Screenshots/Reports%20-%20Admin.jpg)  
    _Monthly scheme performance reports_
 
 ### Hospital Portal
 
 5. **Hospital Home**  
-   ![Hospital Home](/screenshots/Home%20-%20Hospital.jpg)  
+   ![Hospital Home](/Screenshots/Home%20-%20Hospital.jpg)  
    _Daily patient & resource overview_
 
 6. **Patient Registration**  
-   ![Add Patient](/screenshots/Add%20Patient%20-%20Hospital.jpg)  
+   ![Add Patient](/Screenshots/Add%20Patient%20-%20Hospital.jpg) 
    _Offline-capable patient entry form_
 
 7. **AI Scheme Advisor**  
-   ![Javvani AI](/screenshots/JaavaniAI%20-%20Hospital.jpg)  
+   ![Javvani AI](/Screenshots/JaavaniAI%20-%20Hospital.jpg)  
    _Chatbot suggesting eligible health schemes_
 
 8. **Patient Management**  
-   ![Patient List](/screenshots/Patient%20List%20-%20Hospital.jpg)  
+   ![Patient List](/Screenshots/Patient%20List%20-%20Hospital.jpg)  
    _Search/edit patient records_
 
 9. **Patient Details**  
-   ![Patient Details](/screenshots/Patient%20Details%20-%20Hospital.jpg)  
+   ![Patient Details](/Screenshots/Patient%20Details%20-%20Hospital.jpg)  
    _Complete medical history view_
 
 10. **Hospital Reports**  
-    ![Hospital Reports](/screenshots/Reports-Hospital.jpg)  
+    ![Hospital Reports](/Screenshots/Reports-Hospital.jpg)  
     _Local resource utilization analytics_
 
 ## 🛠 Tech Stack
